@@ -1,0 +1,12 @@
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/cattostde /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-9.txt
+END
+
+cat /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-8.txt
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/cattostde /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-7.txt
+END
+
+cat /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-6.txt
+END
+

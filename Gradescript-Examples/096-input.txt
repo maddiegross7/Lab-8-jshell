@@ -1,0 +1,118 @@
+rm -f f0.txt f1.txt f2.txt f3.txt f4.txt
+END
+
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-2.txt
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-0.txt 
+sed s/1/11/g 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt 
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays
+> f0.txt
+NOWAIT
+END
+
+cat thisfiledoesnotexist
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-7.txt 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-3.txt 
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays
+> f1.txt
+NOWAIT
+END
+
+sed s/o/oo/g
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-9.txt 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-2.txt 
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays
+> f2.txt
+NOWAIT
+END
+
+sed s/a/aa/g
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-4.txt 
+sort 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt 
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt 
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays
+> f3.txt
+NOWAIT
+END
+
+awk -f /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/fun-awk-1.txt
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-2.txt 
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays
+> f4.txt
+NOWAIT
+END
+
+sleep 1
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-6.txt
+>> f0.txt
+NOWAIT
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-1.txt
+>> f1.txt
+NOWAIT
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-5.txt
+>> f2.txt
+NOWAIT
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-8.txt
+>> f3.txt
+NOWAIT
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-3.txt
+>> f4.txt
+NOWAIT
+END
+
+cat f0.txt f1.txt f2.txt f3.txt f4.txt
+END
+
+echo Hi
+END
+
+sleep 1
+END
+
+thisprogramdoesnotexist 
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< f4.txt
+>> f2.txt
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< f2.txt
+>> f1.txt
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< f1.txt
+>> f0.txt
+END
+
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep
+< f0.txt
+>> f3.txt
+END
+
+sleep 1
+END
+
+cat f0.txt f1.txt f2.txt f3.txt f4.txt
+END
+

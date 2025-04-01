@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Programming Notes</title>
+<style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+    pre { background-color: #f4f4f4; padding: 10px; }
+    .note { color: red; }
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: center; padding: 10px; }
+    .pipe {  text-align: center; margin-left: 200px; font-size: 15px;}
+    .process { background-color: #f0f0f0; }
+</style>
+</head>
+<body>
+<h1> Jshell Notes (2024 version) </h1>
+<h3> Written by Maria Hernandez Rivero </h3> 
+
+<h2>General Instructions</h2>
+<p>You are allowed (and encouraged) to use the Libfdr libraries.</p>
+
+<h2>About <code>argvs</code>:</h2>
+<ul>
+    <li>Remember, <code>char ***argv</code> is a pointer to an array of <code>char **</code> pointers. Each <code>char **</code> can be thought of as an independent set of command-line arguments, much like the <code>argv</code> array passed to the main function of a C program. In the Command struct, <code>argvs</code> points to an array where each element is an argv-like array for a different command. This will be more significant when you process several commands through piping.</li>
+    <li>Lines starting with <code>&gt;</code>, <code>&lt;</code>, or <code>&gt;&gt;</code> are NOT considered commands. These are just redirections.</li>
+</ul>
+
+<h2>About Pipes:</h2>
+
+<ul>
+    <li>If you have N processes, you will need N-1 pipes to be able to perform interprocess communication between these processes.</li>
+    <li>The first process only writes to the first pipe (it does NOT read from the first pipe) and the last process only reads from the last pipe (it does NOT write to the last pipe).</li>
+    <li>Middle processes read from the previous pipe and write to the current pipe.</li>
+</ul>
+
+<table>
+    <tr>
+        <th class="process">Process 1</th>
+        <th class="process">Process 2</th>
+        <th class="process">Process 3</th>
+        <th class="process">Process 4</th>
+        <th class="process">Process 5</th>
+        <th class="process">Process 6</th>
+    </tr>
+    <tr>
+        <td class="pipe"> write to Pipe 1 -></td>
+        <td class="pipe"><- read from Pipe 1, write to Pipe 2 -></td>
+        <td class="pipe"><- read from Pipe 2, write to Pipe 3 -></td>
+        <td class="pipe"><- read from Pipe 3, write to Pipe 4 -> </td>
+        <td class="pipe"><- read from Pipe 4, write to Pipe 5-></td>
+        <td class="pipe"><- read from Pipe 5 </td>
+        <td></td>
+    </tr>
+</table>
+
+<h3>Example of Piping Different Commands:</h3>
+<pre>
+cat 
+&lt; input.txt
+head -n 10
+sed s/o/oo/g
+sort 
+&gt; output.txt
+END
+</pre>
+
+<p>Assume that <code>input.txt</code> contains the following:</p>
+<pre>
+Hello World
+Zoo Keeper
+Wonderful Day
+Football is fun
+Solo Traveler
+Doors open
+Moon and stars
+Open door policy
+Zoology is cool
+Looming shadows
+Example line eleven
+Example line twelve
+</pre>
+
+<p>After piping the commands above (<code>cat &lt; input.txt | head -n 10 | sed s/o/oo/g | sort | &gt; output.txt</code>), <code> output.txt </code> will contain the following content:</p>
+<pre>
+Doooors oopen
+Fooootball is fun
+Helloo Woorld
+Looooming shadoows
+Moooon and stars
+Open doooor poolicy
+Sooloo Traveler
+Woonderful Day
+Zoooo Keeper
+Zooooloogy is cooool
+</pre>
+
+<h3>Observations:</h3>
+<ul>
+    <li>Notice that each command can be composed of several words (for instance, there are 3 words in this command: head -n 10). To reiterate, each command is considered an argv-like array (char **), and the array containing all of these commands (argvs) is of type char***. In other words, <code>argvs[0] = cat </code> , <code>argvs[1] = head -n 10"</code>, <code>argvs[2] = sed s/o/oo/g </code>, and <code>argvs[3] = sort</code></li>
+    <li>You can use the above example to test your piping before running gradescripts 60 - 100, make sure your output file matches the one provided here.</li>
+</ul>
+
+<h2>argvs or doubly linked list</h2>
+
+<ul>
+    <li>You can work either with the argvs field of the command instance you create or with a doubly linked list.</li>
+    <li>Working with the argvs allows you to access specific indexes. However, if you feel comfortable enough using the blink and flink fields of a dllist (and in general with the whole implementation of a dllist), you don’t need to use a char*** array.</li>
+</ul>
+
+<h2>Structure</h2>
+<pre>
+typedef struct {
+    char *stdin;          /* Filename from which to redirect stdin.  NULL if empty. */
+    char *stdout;         /* Filename to which to redirect stdout.  NULL if empty. */
+    int append_stdout;    /* Boolean for appending. */
+    int wait;             /* Boolean for whether I should wait. */
+    int n_commands;       /* The number of commands that I have to execute */
+    int *argcs;           /* argcs[i] is argc for the i-th command */
+    char ***argvs;        /* argcv[i] is the argv array for the i-th command */
+    Dllist comlist;       /* I use this to incrementally read the commands. */
+} Command;
+</pre>
+
+<h2>A. Main method</h2>
+<ol>
+    <li>Allocate memory for a command instance.</li>
+    <li>Initialize the fields of the command instance. The field <code> append_stdout </code> should be set to 0 by default and the field <code> wait </code> to 1 by default.</li>
+    <li>Loop while there is a line to read:
+        <ul>
+            <li>If the line is not blank or does not start with #, check whether the first word of the line is “NOWAIT”, “&gt;”, “&lt;”, or “&gt;&gt;” and set the fields accordingly. Namely, if the first word is NOWAIT, set <code> wait </code> equal to zero. If the first word is one redirection operator, set the field <code> stdin </code> or <code> stdout </code> (depending on the operator) to the name of the file you want to redirect standard input or standard output. If the first word is &gt;&gt;, set the <code> append_stdout </code> field accordingly as well. <strong> NOTE: </strong> Use strcmp to determine whether the first word is equal to “&gt;”, “&lt;”, or “&gt;&gt;” because if you compare only the first character (is-&gt;fields[0][0]), your program won’t be able to differentiate &gt;&gt; from &gt;.</li>
+            <li>If the first word is equal to <code> END </code>, process your commands:
+                <ol>
+                    <li>Allocate space for the argvs field of your Command instance.</li>
+                    <li>In the command list (comlist), we insert the memory address corresponding to a specific argv command. Namely, each element in our list contains a char**. Loop through this list and copy each of these into the corresponding index of argvs.</li>
+                    <li>Then, process these commands - call the function where you are forking children, waiting for the children to finish, etc.</li>
+                    <li>Free all the memory allocated for these set of commands. You can create a function for this. Make sure to free: every word of every command, the memory allocated for every command, the memory allocated for the whole set of commands (you will need a nested for loop to free the first two). Then also free: the memory allocated for the name of the input and output file (if any redirection was applied). Finally, free the list containing the set of commands. <strong> NOTE: </strong> Make sure to check whether the stdin and stdout fields are equal to NULL or not before freeing, then after freeing them set the fields again to NULL to avoid a double free and a core dump.</li>
+                    <li>Reset the fields of the Command instance appropriately (stdin, stdout, comlist, wait, append_stdout, and n_commands).</li>
+                </ol>
+                <li>c. If the first line is not any of the above (“NOWAIT”, “&gt;”, “&lt;”, or “&gt;&gt;”, or “END”), it means that the line is a command that you need to add to the list. As mentioned previously, in the comlist, we insert the memory address corresponding to a specific argv command - each element in our list contains a char**.</li>
+                <ul>
+                    <li>Allocate memory for this argv.</li>
+                    <li><strong> NOTE </strong> You need to allocate is-&gt;NF + 1 char* to account for NULL at the end of the command. Remember that the execv functions require that the last index of the argv array is equal to NULL.</li>
+                    <li>Loop through each field of the line extracted and set each index of argv to contain one of the words in the line. Then, set the last index equal to NULL.</li>
+                    <li>Append the memory address of <code> argv </code> to the list (use new_jval_v).</li>
+                </ul>
+
+            </li>
+        </ul>
+    </li>
+</ol>
+
+<h2>B. Function where you fork children and wait for the children to exit:</h2>
+<p><strong> NOTE: </strong> The way I implemented piping was on-demand. Namely, pipes are only created when needed, right before forking, minimizing the number of open file descriptors at any time. This approach reduces the need to track and close multiple pipe descriptors across different child processes, potentially simplifying code and reducing resource usage.</p>
+
+<p>If you create all the pipes upfront (before the for loop that loops through each set of command), you need to make sure that you close all the pipes not needed in that specific child to avoid resource leakage and prevent deadlocks.</p>
+
+<p>For example, assume that you have 6 processes, you need 5 pipes to perform interprocess communication between these processes. If you create the pipes upfront, then the workflow would look like this:</p>
+
+<ul>
+    <li>First Process (Child 1): Uses pipes[0][1] (write to the first pipe). Needs to close pipes[0][0] and all descriptors related to pipes 1 to 4.</li>
+    <li>Middle Processes (Child 2 to Child 5): Each process reads from one pipe and writes to another. For instance, Child 2 uses pipes[0][0] for reading and pipes[1][1] for writing. Child 2 closes all other descriptors, including pipes[0][1], pipes[1][0], and all descriptors for pipes 2, 3, and 4.</li>
+    <li>Last Process (Child 6): Uses pipes[4][0] (read from the last pipe). Needs to close pipes[4][1] and all other descriptors.</li>
+</ul>
+
+<p>Now, I will describe the process of opening pipes on-demand: </p>
+
+<h3>Body of the function:</h3>
+<ol>
+    <li>Declare:
+        <ul>
+            <li>a pid variable,</li>
+            <li>an int representing the file descriptor of the files you open. </li>
+            <li>another int representing a file descriptor of the read end of the previous pipe (initialize this to zero).</li>
+            <li>An array of two int to hold the two ends of the pipe.</li>
+            <li>Two tree variables: one tree to hold the pids of the processes you need to wait for, and a tmp tree variable.</li>
+        </ul>
+    </li>
+    <li>Loop through all your commands:
+        <ul>
+            <li>flush stdin, stdout, and stderr.</li>
+            <li>Since you need to create N – 1 pipes, create a pipe if you are between processes 1 and N – 1. Namely, pass the pipes array to the pipe function to open file descriptors for the write and read end of the pipe.</li>
+            <li>fork</li>
+            <li>If you are in the children:
+                <ul>
+                    <li>check if stdin is different from NULL
+                        <ul>
+                            <li>If it’s the first command
+                                <ul>
+                                    <li>Open the file descriptor for the file at command-&gt;stdin (as read only)</li>
+                                    <li>Duplicate this file descriptor to redirect standard input of the current process to read data from that input file.</li>
+                                    <li>Close the file descriptor.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>check if stdout is different from NULL
+                        <ul>
+                            <li>Here instead of opening the file for reading only, you will open it to write only and truncate or append depending on whether the append_stdout is set or not. Remmeber to set the mode</li>
+                            <li>Duplicate this file descriptor to redirect standard output of the current process to write data to the output file.</li>
+                        </ul>
+                    </li>
+                    <li>If you have more than one command, it means that you need to perform piping. Thus, in that case:
+                        <ul>
+                            <li>The following is intended for the middle processes and the last process, so that they read from the read end of the previous pipe – think about which condition you can use to check for this.
+                                <ul>
+                                    <li>Duplicate the file descriptor representing the read end of the previous pipe to redirect standard input of the current process to read data from the read end of the previous pipe.</li>
+                                    <li>Think about which file descriptor you need to close here.</li>
+                                </ul>
+                            </li>
+                            <li>The following is intended for the first process and middle processes, so that they write to the write end of the current pipe - think about which condition you can use to check for this.
+                                <ul>
+                                    <li>Duplicate the file descriptor representing the write end of the current pipe to redirect standard output of the current process to write data to the buffer for this pipe.</li>
+                                    <li>Think about which two file descriptors you need to close.</li>
+                                </ul>
+                            </li>
+                            <li>Call the execvp function with the respective arguments.</li>
+                            <li>perror() and exit failure.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>If you are in the parent:
+                <ul>
+                    <li>If the wait flag is set, add the pid of the children to the tree - do not worry about the value, you just need to worry about the keys you insert in the tree to keep track of the process still active.</li>
+                    <li>If you have more than one command:
+                        <ul>
+                            <li>If the previous pipe is different from zero, close it. This is fundamental because we want to close the read end of the previous pipe that we did not close in the previous iteration.</li>
+                            <li>If you are not in the last command, close the write end of the current pipe, and set the previous pipe equal to the read end of the current pipe. Do NOT close the read end here because when you fork in the next iteration, you want that your next child inherits this previous pipe so that it can read from the read end of the previous pipe.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong> NOTE: </strong> Do NOT wait inside the fork loop. If you wait inside the for loop, you will prevent your parent from going to the next iteration and forking a new child. You want to fork all your processes first, insert their pids in a tree, and then wait outside of the for loop for all of them to finish before you return to main.</li>
+            <li>Remember to handle the case when fork fails.</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>Outside the for loop:</h3>
+<ul>
+    <li>Create a loop that will loop as long as the tree with all the pids is not empty.</li>
+    <li>Inside the loop, wait for each pid. Since you CANNOT use waitpid, call wait and set it equal to a pid. Then, check if this pid is in the tree, if it is, remove it from the tree.</li>
+</ul>
+
+<p><strong> NOTE: </strong> How does wait work?</p>
+<p>wait() is a blocking function. Namely, it will hang the calling process (parent) until ANY of the children exits. Once this happens, the wait function will return the pid of the child that exited. This is the pid that you will look up in your tree and delete if it exists there.</p>
+
+<h2>Final Notes:</h2>
+<ul> 
+    <li>Remember that the exec function replaces the current process image with a new process image. This is why you call execv in the children. Otherwise, you’d be replacing the process image of the parent and your shell would be gone – rip shell.</li>
+    <li>Since the process image of the child is replaced with a new process image, if execv is successful, it would never reach perror() and exit(). However, you do NEED to add these because if execv fails, then the child will never exit and it will continue to the next iteration of the loop creating a fork bomb.</li>
+    <li> Distinction between process image (program) and process: </li>
+    <ul> 
+        <li> Process: It is an instance of a running program, including its code, data, and system resources like file descriptors and memory. Each process has a unique process identifier (PID).</li>
+        <li> Program: This refers to the executable code and associated data loaded into memory. </li>
+        <p> When you use fork(), you create a new process. This new process is a copy of the parent process, and it receives its own unique PID. Both processes initially run the same program. However, when you use an execvp() function in one of these processes, you replace the currently running program in that process with a new program. The process itself (including its PID and system resources) does not change—it simply starts running different code and data.  <strong> Since the PID doesn’t change when execvp() is called, the parent process can accurately track the completion of the child process regardless of what new program the child is running.  </strong></p>
+        <p> Remember: </p>
+        <li> Fork creates a new process. </li>
+        <li> Exec replaces the program running within an existing process.</li>
+    </ul>
+</ul>
+
+</body>
+</html>

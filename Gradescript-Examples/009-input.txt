@@ -1,0 +1,17 @@
+/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-files /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-6.txt f1.txt
+NOWAIT
+END
+
+this-program-does-not-exist
+NOWAIT
+END
+
+cat /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-7.txt
+END
+
+cat /home/jplank/cs360/labs/Lab-8-Jshell/Gradescript-Examples/Input-File-8.txt
+END
+
+sleep 1
+END
+
