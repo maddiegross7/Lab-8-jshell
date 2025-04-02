@@ -1,0 +1,339 @@
+First field: 'rm' (NF: 7)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'head' (NF: 3)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>' (NF: 2)
+passing the first if statement
+this line contains a >
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'thisprogramdoesnotexist' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'sed' (NF: 3)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>' (NF: 2)
+passing the first if statement
+this line contains a >
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'cat' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>' (NF: 2)
+passing the first if statement
+this line contains a >
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'cat' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>' (NF: 2)
+passing the first if statement
+this line contains a >
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'thisprogramdoesnotexist' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'cat' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>' (NF: 2)
+passing the first if statement
+this line contains a >
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'NOWAIT' (NF: 1)
+passing the first if statement
+this line contains a NOWAIT
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'NOWAIT' (NF: 1)
+passing the first if statement
+this line contains a NOWAIT
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'NOWAIT' (NF: 1)
+passing the first if statement
+this line contains a NOWAIT
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'NOWAIT' (NF: 1)
+passing the first if statement
+this line contains a NOWAIT
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'thisprogramdoesnotexist' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'NOWAIT' (NF: 1)
+passing the first if statement
+this line contains a NOWAIT
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'cat' (NF: 6)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'echo' (NF: 2)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'sleep' (NF: 2)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: '/home/jplank/cs360/labs/Lab-8-Jshell/bin/strays-sleep' (NF: 1)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: '<' (NF: 2)
+passing the first if statement
+this line contains a <
+-------------------
+First field: '>>' (NF: 2)
+passing the first if statement
+this line contains a >>
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'sleep' (NF: 2)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
+First field: 'cat' (NF: 6)
+passing the first if statement
+this line contains a different argument
+-------------------
+First field: 'END' (NF: 1)
+passing the first if statement
+this line contains a END
+-------------------
+First field: '' (NF: 0)
