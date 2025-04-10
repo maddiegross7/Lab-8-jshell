@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <fcntl.h>  
 #include <unistd.h> 
 #include "fields.h"
@@ -42,12 +43,6 @@ void freeCommand(Command *commandToFree){
     if(commandToFree->stdout != NULL){
         free(commandToFree->stdout);
     }
-    if(commandToFree->argcs != NULL){
-        free(commandToFree->argcs);
-    }
-    if(commandToFree->argvs != NULL){
-        free(commandToFree->argvs);
-    }
     if(commandToFree->comlist != NULL){
         Dllist temp;
 
@@ -60,6 +55,13 @@ void freeCommand(Command *commandToFree){
         }
         free_dllist(commandToFree->comlist);
     }
+    if(commandToFree->argcs != NULL){
+        free(commandToFree->argcs);
+    }
+    if(commandToFree->argvs != NULL){
+        free(commandToFree->argvs);
+    }
+    
 }
 
 void print_comlist(Command *cmd) {
@@ -169,15 +171,38 @@ void executeCommand(Command *commandToExecute){
             }
             if(j > 0){
                 dup2(fileDescriptorEnd, STDIN_FILENO);
-                close(fileDescriptorEnd);
+                //close(fileDescriptorEnd);
             }
             if(j < commandToExecute->n_commands - 1){
-                
+                close(ends[0]);
+                dup2(ends[1], STDOUT_FILENO);
+                close(ends[1]);
             }
-                
-            
+            execvp(commandToExecute->argvs[j][0], commandToExecute->argvs[j]);
+            fprintf( stderr, "%s: No such file or directory\n", commandToExecute->argvs[j][0]);
+            exit(1); 
+        }else{
+            if(commandToExecute->wait == 1){
+                jrb_insert_int(pids, pid, new_jval_i(0));
+            }
+            if(commandToExecute->n_commands > 1){
+                if(fileDescriptorEnd != 0){
+                    close(fileDescriptorEnd);
+                }
+            }
+            if(j < commandToExecute->n_commands - 1){
+                close(ends[1]);
+                fileDescriptorEnd = ends[0];
+            }
         }
+    }
 
+    while(!jrb_empty(pids)){
+        pid = wait(NULL);
+        tmp = jrb_find_int(pids, pid);
+        if(tmp != NULL){
+            jrb_delete_node(tmp);
+        }
     }
 }
 
@@ -194,32 +219,33 @@ int main(int argc, char const *argv[])
     }
     Command *thisCommand = initializeCommand();
     while(get_line(is) >= 0){
-        printf("First field: '%s' (NF: %d)\n", is->fields[0], is->NF);
+        //printf("First field: '%s' (NF: %d)\n", is->fields[0], is->NF);
         if(is->NF > 0 && strcmp(is->fields[0], "#") != 0){
-            printf("passing the first if statement\n");
+            // printf("passing the first if statement\n");
             if(strcmp(is->fields[0], "<") == 0){
-                printf("this line contains a <\n");
+                // printf("this line contains a <\n");
                 thisCommand->stdin = strdup(is->fields[1]);
             }else if(strcmp(is->fields[0], ">") == 0){
-                printf("this line contains a >\n");
+                // printf("this line contains a >\n");
                 thisCommand->stdout = strdup(is->fields[1]);
             }else if(strcmp(is->fields[0], ">>") == 0){
-                printf("this line contains a >>\n");
+                // printf("this line contains a >>\n");
                 thisCommand->append_stdout = 1;
                 thisCommand->stdout = strdup(is->fields[1]);
             }else if(strcmp(is->fields[0], "NOWAIT") == 0){
-                printf("this line contains a NOWAIT\n");
+                // printf("this line contains a NOWAIT\n");
                 thisCommand->wait = 0;
             }else if(strcmp(is->fields[0], "END") == 0){
-                printf("this line contains a END\n");
-                printf("process argument\n");
+                // printf("this line contains a END\n");
+                // printf("process argument\n");
                 getArgsFromComList(thisCommand);
-                print_comlist(thisCommand);
+                // print_comlist(thisCommand);
+                executeCommand(thisCommand);
                 freeCommand(thisCommand);
                 thisCommand = initializeCommand();
             }else {
-                printf("this line contains a different argument\n");
-                printf("line 1?: %s\n", is->text1);
+                // printf("this line contains a different argument\n");
+                // printf("line 1?: %s\n", is->text1);
                 thisCommand->n_commands++;
                 char **args = malloc(sizeof(char*) * (is->NF + 1));
                 for(int i = 0; i < is->NF; i++){
@@ -228,7 +254,7 @@ int main(int argc, char const *argv[])
                 args[is->NF] = NULL;
                 dll_append(thisCommand->comlist, new_jval_v(args));
             }
-            printf("-------------------\n");
+            // printf("-------------------\n");
         }
     }
     return 0;
